@@ -162,7 +162,7 @@ function payment(){
         }
     });
 };
-//function to validate credit info
+//function to validate blank input
 function formValidation(){
   const $form = $("form");
   const $nameInput = $("#name");
@@ -187,17 +187,28 @@ function formValidation(){
     if($nameInput.val() == "" || $emailInput.val() == "" || $checkbox.prop("checked") == false ){
       alert("Please Fill In All Required Fields");
       return false;
-
-
     }
   });
+};
+// function validateEmail(email){
+//
+//    const emailTest =  /^[^@]+@[^@.]+\.[a-z]+$/i;
+//
+// $("#mail").on("submit", () => {
+//    if (emailTest.test(email) == false){
+//      alert("wrong")
+//    }
+//  });
+// };
+
+
 
 
 
 //validate all fields on form except credit info [will be seperate function]
 
 
-};
+
 //set focus to first text input when page loads
 $name.focus();
 //call function that reveals Other Job role text input
@@ -210,3 +221,5 @@ schedule();
 payment();
 
 formValidation();
+//
+// validateEmail($("#mail"));
