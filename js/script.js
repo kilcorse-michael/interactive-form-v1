@@ -3,6 +3,8 @@ const $selectJob = $("#title");
 const $activities = $(".activities");
 const $checkbox = $('[type="checkbox"]');
 const $costSpan = $("<span class ='span-activities'></span>");
+const $activitiesError = $("<span class='span-inputCheck'></span>")
+$activities.append($activitiesError);
 $activities.append($costSpan);
 let cost = 0.00
 
@@ -86,6 +88,8 @@ const schedule = () =>{
 
     $checkbox.on("change", (e) =>{
 
+      $activitiesError.remove();
+
         if($frameworks.is(":checked")){
           $express.prop("disabled", "true");
           $express.parent().css("color", "grey");
@@ -161,7 +165,35 @@ function payment(){
 //function to validate credit info
 function formValidation(){
   const $form = $("form");
-  const $nameInput = $("input #name");
+  const $nameInput = $("#name");
+  const $emailInput = $("#mail");
+  const $activities = $("#activities");
+
+  $form.on("submit", (e) => {
+    if($emailInput.val() == ""){
+      $emailInput.attr("placeholder", "Please Enter a Valid Email");
+    }
+
+    if($nameInput.val() == ""){
+      $nameInput.attr("placeholder", "Please Enter a Valid Name");
+    }
+
+    if($checkbox.prop("checked") == false){
+
+      $activitiesError.text("Please Select at least One Activity")
+
+    }
+
+    if($nameInput.val() == "" || $emailInput.val() == "" || $checkbox.prop("checked") == false ){
+      alert("Please Fill In All Required Fields");
+      return false;
+
+
+    }
+  });
+
+
+
 //validate all fields on form except credit info [will be seperate function]
 
 
@@ -176,4 +208,5 @@ tshirtColor();
 schedule();
 //call to payment function
 payment();
-]
+
+formValidation();
