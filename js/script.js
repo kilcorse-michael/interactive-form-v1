@@ -1,4 +1,6 @@
+const $form = $("form");
 const $name = $("#name");
+const $emailInput = $("#mail");
 const $selectJob = $("#title");
 const $activities = $(".activities");
 const $checkbox = $('[type="checkbox"]');
@@ -28,12 +30,17 @@ function tshirtColor(){
   const $tshirtDesign = $("#design");
   const $tshirtColors = $("#colors-js-puns");
   const $colors = $("#color");
+  const $colorSpan = $("<span />").addClass("tshirtColor");
+
+  $tshirtColors.append($colorSpan);
   //color option hidden upon load
-  $tshirtColors.hide();
+  $colorSpan.text("Please Select a Theme");
+  $colors.hide();
 //Event listener for tshirt color options
   $tshirtDesign.on('change', function(e){
     if($(this).val() === "js puns"){
-      $tshirtColors.show();
+      $colorSpan.text("");
+      $colors.show();
           $colors.find("option:eq(0)").show().attr("selected", "selected");
           $colors.find("option:eq(1)").show();
           $colors.find("option:eq(2)").show();
@@ -41,7 +48,8 @@ function tshirtColor(){
           $colors.find("option:eq(4)").hide();
           $colors.find("option:eq(5)").hide();
     }else if($(this).val() === "heart js"){
-      $tshirtColors.show();
+      $colorSpan.text("");
+      $colors.show();
           $colors.find("option:eq(3)").show().attr("selected", "selected");
           $colors.find("option:eq(4)").show();
           $colors.find("option:eq(5)").show();
@@ -136,6 +144,7 @@ function payment(){
     const $paypalInfo = $creditInfo.next();
     const $bitCoinInfo = $paypalInfo.next();
 
+
     $select.prop("disabled", "true");
     $creditOption.attr("selected", "selected");
     $paypalInfo.hide();
@@ -164,48 +173,125 @@ function payment(){
 };
 //function to validate blank input
 function formValidation(){
-  const $form = $("form");
+
   const $nameInput = $("#name");
-  const $emailInput = $("#mail");
+
   const $activities = $("#activities");
 
   $form.on("submit", (e) => {
-    if($emailInput.val() == ""){
+    if($emailInput.val() == "" || validateEmail($emailInput) == false){
+      $emailInput.val("");
       $emailInput.attr("placeholder", "Please Enter a Valid Email");
+      $emailInput.css("border-color", "red");
+      return false;
     }
-
+  });
+  $form.on("submit", (e) => {
     if($nameInput.val() == ""){
       $nameInput.attr("placeholder", "Please Enter a Valid Name");
+      $nameInput.css("border-color", "red");
+      return false;
     }
-
-    if($checkbox.prop("checked") == false){
-
+  });
+  $form.on("submit", (e) => {
+    if($checkbox.is(":checked") == false){
+      $activitiesError.css("color", "red");
       $activitiesError.text("Please Select at least One Activity")
 
+      return false;
     }
-
-    if($nameInput.val() == "" || $emailInput.val() == "" || $checkbox.prop("checked") == false ){
+});
+  $form.on("submit", (e) => {
+    if($nameInput.val() == "" || $emailInput.val() == "" || $checkbox.is(":checked") == false ){
       alert("Please Fill In All Required Fields");
       return false;
     }
   });
 };
-// function validateEmail(email){
-//
-//    const emailTest =  /^[^@]+@[^@.]+\.[a-z]+$/i;
-//
-// $("#mail").on("submit", () => {
-//    if (emailTest.test(email) == false){
-//      alert("wrong")
-//    }
-//  });
-// };
+function validateEmail(email){
+
+   const emailTest =  /^[^@]+@[^@.]+\.[a-z]+$/i;
+
+   return emailTest.test(email.val());
+
+};
+
+function regExCreditValidate(credit){
+
+  const creditTest = /^\d{13,16}$/;
+
+  return creditTest.test(credit.val());
+
+};
+
+function regExZipValidate(zip){
+
+  const zipTest = /\d{5}/;
+
+  return zipTest.test(zip.val());
+
+}
+
+function regExCvvValidate(cvv){
+  const cvvTest = /\d{3}/;
+
+  return cvvTest.test(cvv.val());
+};
+
+function creditError (){
+  const $creditOption = $("[value='credit card']");
 
 
+  const creditNumberInput = $("#cc-num");
+  const $cvvInput = $("#cvv");
+
+  if($creditOption.is(":selected")){
+    $form.on("submit", () =>{
+    if(regExCreditValidate(creditNumberInput) == false){
+      creditNumberInput.val("");
+      creditNumberInput.attr("placeholder", "Invalid");
+      creditNumberInput.css("border-color", "red");
+      return false;
+    }else if(regExCreditValidate(creditNumberInput) == true){
+      return true;
+    }
 
 
+    });
+  }
+};
 
-//validate all fields on form except credit info [will be seperate function]
+function zipError(){
+      const $zipInput = $("#zip");
+
+              $form.on("submit", (e) =>{
+            if(regExZipValidate($zipInput) == false){
+              $zipInput.val("");
+              $zipInput.attr("placeholder", "Invalid");
+              $zipInput.css("border-color", "red");
+              return false
+            }else if(regExZipValidate($zipInput) == true){
+              return true;
+        }
+    });
+};
+
+function cvvError(){
+  const $cvvInput = $("#cvv");
+
+  $form.on("submit", (e) =>{
+if(regExCvvValidate($cvvInput) == false){
+  $cvvInput.val("");
+  $cvvInput.attr("placeholder", "Invalid");
+  $cvvInput.css("border-color", "red");
+  return false
+}else if(regExCvvValidate($cvvInput) == true){
+  return true;
+}
+});
+};
+
+
 
 
 
@@ -219,7 +305,11 @@ tshirtColor();
 schedule();
 //call to payment function
 payment();
-
+//call function to validate empty fields in form
 formValidation();
-//
-// validateEmail($("#mail"));
+//call function using regular expressions to test cc number
+creditError();
+//call function using regular expressions to test zip code
+zipError();
+//call function using regular expressions to test cvv number
+cvvError();
