@@ -279,16 +279,16 @@ function zipError(){
 function cvvError(){
   const $cvvInput = $("#cvv");
 
-  $form.on("submit", (e) =>{
-if(regExCvvValidate($cvvInput) == false){
-  $cvvInput.val("");
-  $cvvInput.attr("placeholder", "Invalid");
-  $cvvInput.css("border-color", "red");
-  return false
-}else if(regExCvvValidate($cvvInput) == true){
-  return true;
-}
-});
+    $form.on("submit", (e) =>{
+  if(regExCvvValidate($cvvInput) == false){
+    $cvvInput.val("");
+    $cvvInput.attr("placeholder", "Invalid");
+    $cvvInput.css("border-color", "red");
+    return false
+  }else if(regExCvvValidate($cvvInput) == true){
+    return true;
+    }
+  });
 };
 
 
