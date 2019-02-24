@@ -5,6 +5,9 @@ const $selectJob = $("#title");
 const $activities = $(".activities");
 const $checkbox = $('[type="checkbox"]');
 const $costSpan = $("<span class ='span-activities'></span>");
+const $creditOption = $("[value='credit card']");
+const $paypalOption = $("[value='paypal']");
+const $bitCoin = $("[value='bitcoin']");
 const $activitiesError = $("<span class='span-inputCheck'></span>")
 $activities.append($activitiesError);
 $activities.append($costSpan);
@@ -137,10 +140,8 @@ const schedule = () =>{
 function payment(){
     const $creditInfo = $("#credit-card");
     const $paymentOptions = $("#payment");
-    const $creditOption = $("[value='credit card']");
     const $select = $("[value='select_method']");
-    const $paypalOption = $("[value='paypal']");
-    const $bitCoin = $("[value='bitcoin']");
+
     const $paypalInfo = $creditInfo.next();
     const $bitCoinInfo = $paypalInfo.next();
 
@@ -239,14 +240,22 @@ function regExCvvValidate(cvv){
 };
 
 function creditError (){
-  const $creditOption = $("[value='credit card']");
-
 
   const creditNumberInput = $("#cc-num");
   const $cvvInput = $("#cvv");
 
+$form.on("submit", () =>{
+  if($paypalOption.is(":selected")){
+    creditNumberInput.attr(true);
+    return true;
+  }else if($bitCoin.is(":selected")){
+    creditNumberInput.attr(true);
+    return true;
+  }
+
+});
+$form.on("submit", () =>{
   if($creditOption.is(":selected")){
-    $form.on("submit", () =>{
     if(regExCreditValidate(creditNumberInput) == false){
       creditNumberInput.val("");
       creditNumberInput.attr("placeholder", "Invalid");
@@ -254,11 +263,10 @@ function creditError (){
       return false;
     }else if(regExCreditValidate(creditNumberInput) == true){
       return true;
+      }
     }
+  });
 
-
-    });
-  }
 };
 
 function zipError(){
@@ -274,6 +282,7 @@ function zipError(){
               return true;
         }
     });
+
 };
 
 function cvvError(){
@@ -288,7 +297,9 @@ function cvvError(){
   }else if(regExCvvValidate($cvvInput) == true){
     return true;
     }
+
   });
+
 };
 
 
